@@ -1,0 +1,564 @@
+package io.algostack.cds.domain;
+
+
+package io.algostack.cds.domain;
+
+
+package io.algostack.cds.domain;
+
+
+
+
+
+package io.algostack.cds.domain;
+
+import io.mmap.ScenConfig;
+
+
+package io.algostack.cds.domain;
+
+
+
+
+package io.algostack.cds.domain;
+
+import io.algostack.mmap.DoubleArray;
+
+
+
+
+package io.algostack.cds.domain;
+
+import io.algostack.mmap.DoubleArray;
+import io.algostack.mmap.DoubleArrayWriteMap;
+
+import java.io.File;
+import java.util.Map;
+
+public class MMPriceArrayWriter {
+
+
+    public static void write(ProductKey productKey, Map<PriceArrayKey, PriceArray> priceArrayMap, File file) {
+
+        final DoubleArrayWriteMap<TestKey> writeMap = DoubleArrayWriteMap.create();
+        writeMap.put(new TestKey("A", "B"), DoubleArray.create(new double[]{1.0,2.0,3.0}));
+        writeMap.put(new TestKey("A", "C"), DoubleArray.create(new double[]{2.0,3.0,4.0}));
+        writeMap.put(new TestKey("A", "D"), DoubleArray.create(new double[]{3.0,4.0,5.0,6.0}));
+        final File file = new File("tmp.dat");
+    }
+}
+
+package io.algostack.cds.domain;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+public enum NotionalCurrency implements Serializable {
+    EUR,
+    USD,
+
+    public static boolean isValidCurrency(String currency) {
+        try {
+            NotionalCurrency.valueOf(currency);
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
+        return true;
+    }
+
+    public static Set<NotionalCurrency> getNonEurCurrencies() {
+        Set<NotionalCurrency> nonEurCurrencies =
+                new HashSet<NotionalCurrency>(Arrays.asList(NotionalCurrency.values()));
+        nonEurCurrencies.remove(EUR);
+        return nonEurCurrencies;
+    }
+
+    public String toLowerCase() {
+        return this.name().toLowerCase();
+    }
+
+    public static NotionalCurrency fromCurrencyString(String s) {
+        if(StringUtils.isBlank(s)){
+            throw new IllegalArgumentException("Cannot get NotionalCurrency for a null or empty value");
+        }
+        return NotionalCurrency.valueOf(s.toUpperCase().trim());
+    }
+}
+
+package io.algostack.cds.domain;
+
+public class PnlArray<K> {
+
+    private final Position<K> position;
+    private final double referencePrice;
+    private final double[] pnls;
+
+    public PnlArray(Position<K> position, double referencePrice, double[] pnls) {
+        this.position = position;
+        this.referencePrice = referencePrice;
+        this.pnls = pnls;
+    }
+
+    public Position<K> getPosition() {
+        return position;
+    }
+
+    public double getReferencePrice() {
+        return referencePrice;
+    }
+
+    public double[] getPnls() {
+        return pnls;
+    }
+}
+
+package io.algostack.cds.domain;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class PriceArrayKey implements Serializable {
+
+    private final ProductKey productKey;
+    private final int coupon;
+    private final LocalDate maturity;
+
+    public PriceArrayKey(ProductKey productKey, int coupon, LocalDate maturity) {
+        this.productKey = productKey;
+        this.coupon = coupon;
+        this.maturity = maturity;
+    }
+
+    public ProductKey getProductKey() {
+        return productKey;
+    }
+
+    public int getCoupon() {
+        return coupon;
+    }
+
+    public LocalDate getMaturity() {
+        return maturity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof PriceArrayKey))
+            return false;
+
+        PriceArrayKey that = (PriceArrayKey) o;
+
+        if (coupon != that.coupon)
+            return false;
+        if (productKey != null ? !productKey.equals(that.productKey) : that.productKey != null)
+            return false;
+        return maturity != null ? maturity.equals(that.maturity) : that.maturity == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = productKey != null ? productKey.hashCode() : 0;
+        result = 31 * result + coupon;
+        result = 31 * result + (maturity != null ? maturity.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PriceArrayKey{" +
+                "productKey=" + productKey +
+                ", coupon=" + coupon +
+                ", maturity=" + maturity +
+                '}';
+    }
+}
+
+
+package io.algostack.cds.domain;
+
+import java.io.Serializable;
+
+public class ProductKey implements Serializable {
+    private final String name;
+    private final ContractualDefinition cDef;
+    private final Tier tier;
+    private final TransactionType transactionType;
+
+    public ProductKey(String name, ContractualDefinition cDef, Tier tier, TransactionType transactionType) {
+        this.name = name;
+        this.cDef = cDef;
+        this.tier = tier;
+        this.transactionType = transactionType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ContractualDefinition getcDef() {
+        return cDef;
+    }
+
+    public Tier getTier() {
+        return tier;
+    }
+
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof ProductKey))
+            return false;
+
+        ProductKey that = (ProductKey) o;
+
+        if (name != null ? !name.equals(that.name) : that.name != null)
+            return false;
+        if (cDef != that.cDef)
+            return false;
+        if (tier != that.tier)
+            return false;
+        return transactionType == that.transactionType;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (cDef != null ? cDef.hashCode() : 0);
+        result = 31 * result + (tier != null ? tier.hashCode() : 0);
+        result = 31 * result + (transactionType != null ? transactionType.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductKey{" +
+                "name='" + name + '\'' +
+                ", cDef=" + cDef +
+                ", tier=" + tier +
+                ", transactionType=" + transactionType +
+                '}';
+    }
+
+
+}
+
+
+package io.algostack.cds.domain;
+
+import java.security.SecureRandom;
+
+public class RandomString {
+
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static final String UPPER_CASE_AB = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static SecureRandom rnd = new SecureRandom();
+
+    public static String randomString( int len ){
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ )
+            sb.append( AB.charAt( rnd.nextInt(AB.size()) ) );
+        return sb.toString();
+    }
+
+    public static String upperCaseAlphabets( int len ) {
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ )
+            sb.append( UPPER_CASE_AB.charAt( rnd.nextInt(UPPER_CASE_AB.size()) ) );
+        return sb.toString();
+    }
+
+}
+
+
+package io.algostack.cds.domain;
+
+public class SimplePriceArray implements PriceArray {
+
+    private final double refPrice;
+    private final double[] mtms;
+
+    public SimplePriceArray(double refPrice, double[] mtms) {
+        this.refPrice = refPrice;
+        this.mtms = mtms;
+    }
+
+    @Override
+    public double getRefPrice() {
+        return refPrice;
+    }
+
+    @Override
+    public double getPrice(int idx) {
+        return mtms[idx];
+    }
+
+    @Override
+    public int getLength() {
+        return mtms.size;
+    }
+}
+
+package io.algostack.cds.domain;
+
+import org.apache.commons.lang3.StringUtils;
+
+public enum Tier {
+    SNRFOR,
+    NA;
+}
+
+
+package io.algostack.cds.domain;
+
+public enum TransactionType {
+
+    EC("European Corporate", NotionalCurrency.EUR),
+    STEC("Standard European Corporate", NotionalCurrency.EUR),
+    SNAC("Standard North American Corporate", NotionalCurrency.USD),
+    SEFC("Standard European Financial Corporate", NotionalCurrency.EUR),
+
+    private String value;
+    private NotionalCurrency currency;
+
+    TransactionType(String value, NotionalCurrency currency) {
+        this.value = value;
+        this.currency = currency;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public NotionalCurrency getCurrency() {
+        return currency;
+    }
+
+}
+
+
+package io.algostack.mmap;
+
+public class ScenConfig {
+
+    private final int scenarios;
+    private final int days;
+
+    public ScenConfig(int scenarios, int days) {
+        this.scenarios = scenarios;
+        this.days = days;
+    }
+
+    public int getScenarios() {
+        return scenarios;
+    }
+
+    public int getDays() {
+        return days;
+    }
+
+    public final int getScenario(int scenarioDayIndex) {
+        return scenarioDayIndex/scenarios;
+    }
+
+    public int getScenarioDays() { return scenarios * days; };
+
+    public final int getIndex(int scenario, int day) {
+        return day * scenarios + scenario;
+    }
+}
+
+
+package io.algostack.mmap;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.stream.Collectors;
+
+/**
+ * Wraps expected shortfall and worst case scenarios used to calculate it
+ *
+ */
+public class VarExpectedShortfall<R> {
+
+    public static final double EPSILON = 10e-10;
+
+    private final double shortfall;
+    private final List<Integer> worstCaseScenarioDays;
+    private final R sourcePnl;
+    private final ScenConfig scenarioConfig;
+
+    public VarExpectedShortfall(double shortfall, List<Integer> worstCaseScenarioDays, R sourcePnl, ScenConfig scenarioConfig) {
+        this.shortfall = shortfall;
+        this.worstCaseScenarioDays = worstCaseScenarioDays;
+        this.sourcePnl = sourcePnl;
+        this.scenarioConfig = scenarioConfig;
+    }
+
+    public double getShortfall() {
+        return shortfall;
+    }
+
+    public List<Integer> getWorstCaseScenarioDays() {
+        return worstCaseScenarioDays;
+    }
+
+    public ScenConfig getScenarioConfig() {
+        return scenarioConfig;
+    }
+
+    public R getSourcePnl() {
+        return sourcePnl;
+    }
+
+    public List<Integer> getWorstCaseScenarios() {
+        return worstCaseScenarioDays.stream()
+                .map(i-> scenarioConfig.getScenario(i))
+                .collect(Collectors.toList());
+    }
+
+    public static VarExpectedShortfall<double[]> of(double[] pnl, ScenConfig scenarioDay, double varPrecision) {
+        final int maxWorstCases = calculateTargetScenarioThreshold(scenarioDay.getScenarios(), varPrecision);
+        return of(pnl, scenarioDay, maxWorstCases);
+    }
+
+    public static int getWorstDayIndexForScenario(double[] pnl, int scenario, ScenConfig scenarioDay) {
+        int minDayIndex = scenario;
+        for (int j = 1; j < scenarioDay.getDays(); j++) {
+            final int dayIndex = j * scenarioDay.getScenarios() + scenario;
+            if (pnl[dayIndex] < pnl[minDayIndex]) {
+                minDayIndex = dayIndex;
+            }
+        }
+        return minDayIndex;
+    }
+
+    public static VarExpectedShortfall of(double[] pnl, ScenConfig scenarioDay, int maxWorstCases) {
+        return of(pnl, pnl, scenarioDay, maxWorstCases);
+    }
+
+    public static <T> VarExpectedShortfall<T> of(double[] pnlArray, T sourcePnl, ScenConfig ScenConfig, int maxWorstCases) {
+        if (maxWorstCases > 0) {
+            PriorityQueue<ScenarioDayPnl> worstScenarios = new PriorityQueue<>(maxWorstCases, (o1, o2) -> Double.compare(o2.getPnl(), o1.getPnl()));
+            for (int i = 0; i < ScenConfig.getScenarios(); i++) {
+                final int worstScenarioDayIndex = getWorstDayIndexForScenario(pnlArray, i, ScenConfig);
+                final double worstPnl = pnlArray[worstScenarioDayIndex];
+                if (worstScenarios.size() == maxWorstCases) {
+                    if (worstScenarios.peek().getPnl() > worstPnl) {
+                        worstScenarios.poll();
+                        worstScenarios.add(new ScenarioDayPnl(worstScenarioDayIndex, worstPnl));
+                    }
+                } else {
+                    worstScenarios.add(new ScenarioDayPnl(worstScenarioDayIndex, worstPnl));
+                }
+            }
+
+            final ScenarioDayPnl[] scenDayPnls = worstScenarios.toArray(new ScenarioDayPnl[0]);
+
+            final List<Integer> worstCaseScenarios = new ArrayList<>();
+            double worstScenariosTotalPnl = 0.0D;
+            for (int i = 0; i < scenDayPnls.size; i++) {
+                worstScenariosTotalPnl += scenDayPnls[i].getPnl();
+                worstCaseScenarios.add(scenDayPnls[i].getScenarioDayIndex());
+            }
+
+            final double expectedShortfall = maxWorstCases > 0 ? (worstScenariosTotalPnl / maxWorstCases) : 0.0D;
+
+            return new VarExpectedShortfall(expectedShortfall, worstCaseScenarios, sourcePnl, ScenConfig);
+        } else {
+            return new VarExpectedShortfall(0.0D, Collections.emptyList(), sourcePnl, ScenConfig);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        VarExpectedShortfall<?> that = (VarExpectedShortfall<?>) o;
+
+        if (Double.compare(that.shortfall, shortfall) != 0)
+            return false;
+        if (worstCaseScenarioDays != null ? !worstCaseScenarioDays.equals(that.worstCaseScenarioDays) : that.worstCaseScenarioDays != null)
+            return false;
+        return scenarioConfig != null ? scenarioConfig.equals(that.scenarioConfig) : that.scenarioConfig == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(shortfall);
+        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (worstCaseScenarioDays != null ? worstCaseScenarioDays.hashCode() : 0);
+        result = 31 * result + (scenarioConfig != null ? scenarioConfig.hashCode() : 0);
+        return result;
+    }
+
+    /**
+     * Calculates number of worst cases to consider when calculating expected short fall
+     *
+     * @param numberOfScenarios
+     * @param varPrecision
+     * @return
+     */
+    public static int calculateTargetScenarioThreshold(final int numberOfScenarios, final double varPrecision) {
+        if (varPrecision < EPSILON) {
+            return numberOfScenarios;
+        }
+        return (int) Math.floor(numberOfScenarios - (numberOfScenarios * varPrecision)) + 1;
+    }
+
+}
+
+package io.algostack.mmap;
+
+public class ScenarioDayPnl {
+
+    private final int scenarioDayIndex;
+    private final double  pnl;
+
+    public ScenarioDayPnl(int scenarioDayIndex, double pnl) {
+        this.scenarioDayIndex = scenarioDayIndex;
+        this.pnl = pnl;
+    }
+
+    public int getScenarioDayIndex() {
+        return scenarioDayIndex;
+    }
+
+    public double getPnl() {
+        return pnl;
+    }
+}
+
+
+package io.algostack.mmap;
+
+import io.algostack.cds.domain.ContractualDefinition;
+import io.algostack.cds.domain.RandomString;
+import io.algostack.cds.domain.SimplePriceArray;
+import io.algostack.cds.domain.Tier;
+import io.algostack.cds.domain.TransactionType;
+import io.algostack.cds.domain.PriceArrayKey;
+import io.algostack.cds.domain.ProductKey;
+import com.google.common.collect.ImmutableList;
+
+
+
+
+

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.algostack.risk.riskengine";
+option java_outer_classname = "RiskEngineProto";
+option objc_class_prefix = "HLW";
+
+package riskengine;
+
+service RiskEngine {
+  // Sends a greeting
+  rpc calcVar(CalcRequestProto) returns (CalcResponseProto) {}
+}
+
+message CalcRequestProto {
+  string name = 1;
+}
+
+message CalcResponseProto {
+  string message = 1;
+}
