@@ -16,6 +16,7 @@ public class RiskEngine {
     private void start() throws IOException {
         /* The port on which the server should run */
 
+        logger.info("Maket data path: " + AppProperties.getMarketDataPath());
         final AppContext context = AppContext.getInstance();
 
         int port = AppProperties.getPort();
