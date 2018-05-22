@@ -27,7 +27,7 @@ public class AppContext {
     private final PriceArrayLoader priceArrayLoader;
     private final LinearPriceArrayProvider scaledLinearPriceArrayProvider;
     private final ExpectedShortfallCalculator scaledShortfallCalculator;
-    private final DistributedExecutor distributedExecutor;
+    private final TaskExecutor taskExecutor;
     private final RiskEngineGrpcImpl riskEngineGrpc;
     private final ExpectedShortfallService expectedShortfallService;
     private final PositionService positionService;
@@ -39,9 +39,9 @@ public class AppContext {
         this.unscaledLinearPriceArrayProvider = new LinearPriceArrayProviderImpl(priceArrayLoader.load(AppProperties.getESUnscaledPath()));
         this.scaledShortfallCalculator = new ExpectedShortfallCalculator(new ScenConfig(2500, 5), getScaledLinearPriceArrayProvider());
         this.unscaledShortfallCalculator = new ExpectedShortfallCalculator(new ScenConfig(2500, 5), getScaledLinearPriceArrayProvider());
-        this.distributedExecutor = new HazelcastDistributedExecutor();
+        this.taskExecutor = new LocalTaskExecutor();
         this.positionService = new RandomPositionService(scaledLinearPriceArrayProvider);
-        this.expectedShortfallService = new ExpectedShortfallService(positionService, distributedExecutor);
+        this.expectedShortfallService = new ExpectedShortfallService(positionService, taskExecutor);
         this.riskEngineGrpc = new RiskEngineGrpcImpl(expectedShortfallService);
     }
 
@@ -57,8 +57,8 @@ public class AppContext {
         return scaledShortfallCalculator;
     }
 
-    public DistributedExecutor getDistributedExecutor() {
-        return distributedExecutor;
+    public TaskExecutor getTaskExecutor() {
+        return taskExecutor;
     }
 
     public RiskEngineGrpcImpl getRiskEngineGrpc() {

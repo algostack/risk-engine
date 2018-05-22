@@ -9,9 +9,9 @@ import java.util.concurrent.Future;
 public class ExpectedShortfallService {
 
     private final PositionService positionService;
-    private final DistributedExecutor executor;
+    private final TaskExecutor executor;
 
-    public ExpectedShortfallService(PositionService positionService, DistributedExecutor executor) {
+    public ExpectedShortfallService(PositionService positionService, TaskExecutor executor) {
         this.positionService = positionService;
         this.executor = executor;
     }
