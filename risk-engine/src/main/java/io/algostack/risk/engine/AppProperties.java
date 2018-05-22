@@ -9,7 +9,7 @@ public class AppProperties {
     }
 
     public static String getMarketDataPath() {
-        return System.getProperty("marketdata.path");
+        return System.getProperty("marketdata.path", "~/pricearrays");
     }
 
     public static String getESScaledPath() {

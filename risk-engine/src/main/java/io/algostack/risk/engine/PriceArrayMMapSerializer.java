@@ -29,6 +29,7 @@ public class PriceArrayMMapSerializer {
 
 
     public void serialize(File folder, ProductKey productKey,  List<PriceArray> priceArrays) {
+        System.out.println("Loading files from " + folder.getAbsolutePath());
         final File file = new File(folder, productKey.toUniqKey() + ".bin");
         final Map<PriceArrayKey, DoubleArray> map = priceArrays.stream().collect(Collectors.toMap(e -> e.getKey(), Function.identity()));
         final DoubleArrayWriteMap<PriceArrayKey> writeMap = DoubleArrayWriteMap.create(map);
