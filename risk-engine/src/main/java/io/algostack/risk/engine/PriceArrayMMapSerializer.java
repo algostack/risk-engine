@@ -26,10 +26,8 @@ public class PriceArrayMMapSerializer {
     public PriceArrayMMapSerializer() {
     }
 
-
-
     public void serialize(File folder, ProductKey productKey,  List<PriceArray> priceArrays) {
-        System.out.println("Loading files from " + folder.getAbsolutePath());
+        LOG.info("Loading files from " + folder.getAbsolutePath());
         final File file = new File(folder, productKey.toUniqKey() + ".bin");
         final Map<PriceArrayKey, DoubleArray> map = priceArrays.stream().collect(Collectors.toMap(e -> e.getKey(), Function.identity()));
         final DoubleArrayWriteMap<PriceArrayKey> writeMap = DoubleArrayWriteMap.create(map);
@@ -37,6 +35,7 @@ public class PriceArrayMMapSerializer {
     }
 
     public Map<PriceArrayKey, PriceArray> deserialize(File folder) {
+        LOG.info("Loading files from " + folder);
         final Stopwatch stopwatch = Stopwatch.createStarted();
         final Random random = new Random();
         final File[] files = folder.listFiles((dir, name) -> name.endsWith(".bin"));
