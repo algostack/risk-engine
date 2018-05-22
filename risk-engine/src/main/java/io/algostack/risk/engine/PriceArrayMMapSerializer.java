@@ -35,10 +35,11 @@ public class PriceArrayMMapSerializer {
     }
 
     public Map<PriceArrayKey, PriceArray> deserialize(File folder) {
-        LOG.info("Loading files from " + folder);
+        LOG.info("Loading files from " + folder.getAbsolutePath());
         final Stopwatch stopwatch = Stopwatch.createStarted();
         final Random random = new Random();
         final File[] files = folder.listFiles(); //((dir, name) -> name.endsWith(".bin"));
+
         final Map<PriceArrayKey, PriceArray> map = Arrays.stream(files)
                 .parallel()
                 .map(DoubleArrayReadMap::<PriceArrayKey>load)
