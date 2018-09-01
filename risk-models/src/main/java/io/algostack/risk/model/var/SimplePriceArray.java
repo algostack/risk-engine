@@ -1,6 +1,5 @@
 package io.algostack.risk.model.var;
 
-import io.algostack.mmap.DoubleArray;
 import io.algostack.risk.model.domain.cds.PriceArrayKey;
 
 public class SimplePriceArray implements PriceArray {
